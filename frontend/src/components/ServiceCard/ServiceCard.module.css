@@ -1,0 +1,41 @@
+.serviceCard {
+  background: var(--glass-bg, rgba(255, 255, 255, 0.75));
+  backdrop-filter: var(--glass-backdrop, blur(14px));
+  border-radius: var(--glass-radius, 22px);
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: var(--glass-shadow, 0 20px 60px rgba(0, 0, 0, 0.12));
+  transition: transform 0.3s ease, background 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.serviceCard:hover {
+  transform: translateY(-10px);
+  background: white;
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+  background: var(--color-bg-pink);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.serviceCard h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.serviceCard p {
+  color: #666;
+  font-size: 0.95rem;
+}

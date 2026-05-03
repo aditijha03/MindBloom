@@ -1,0 +1,50 @@
+.servicesContainer {
+  padding: 4rem 5%;
+  background: var(--gradient-bg);
+  background-size: 200% 200%;
+  animation: softMove var(--gradient-anim-duration) ease infinite;
+  min-height: 100vh;
+  position: relative;
+}
+
+.backBtn {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  color: var(--color-primary-dark);
+  font-weight: 500;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+.backBtn:hover {
+  background: white;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.header p {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}

@@ -1,0 +1,33 @@
+.teamCard {
+  background: var(--glass-bg, rgba(255, 255, 255, 0.75));
+  backdrop-filter: var(--glass-backdrop, blur(14px));
+  border-radius: var(--glass-radius, 22px);
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: var(--glass-shadow, 0 20px 60px rgba(0, 0, 0, 0.12));
+  transition: transform 0.3s ease;
+}
+
+.teamCard:hover {
+  transform: translateY(-10px);
+}
+
+.teamImg {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 4px solid white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.teamCard h3 {
+  color: var(--color-primary-dark, #5a4dfc);
+  margin-bottom: 5px;
+}
+
+.teamCard p {
+  color: #666;
+  font-size: 0.95rem;
+}

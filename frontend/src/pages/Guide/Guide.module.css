@@ -1,0 +1,85 @@
+.guideContainer {
+  padding: 4rem 5%;
+  background: var(--gradient-bg);
+  background-size: 200% 200%;
+  animation: softMove var(--gradient-anim-duration) ease infinite;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  background: linear-gradient(135deg, var(--color-accent-pink), white);
+  padding: 3rem;
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.section {
+  margin-bottom: 4rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section h2 {
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-accent-pink);
+  padding-bottom: 10px;
+}
+
+.pillarList, .redFlagList {
+  background: var(--glass-bg);
+  padding: 2rem 3rem;
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.disordersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.disorderCard {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.disorderCard:hover {
+  transform: translateY(-5px);
+}
+
+.categoryTag {
+  display: inline-block;
+  background: var(--color-accent-blue);
+  color: var(--color-primary-dark);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.disorderCard h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.disorderCard p {
+  color: #666;
+  font-size: 0.95rem;
+}

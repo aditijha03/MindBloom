@@ -1,0 +1,67 @@
+.privacyContainer {
+  padding: 4rem 5%;
+  background: var(--gradient-bg);
+  background-size: 200% 200%;
+  animation: softMove var(--gradient-anim-duration) ease infinite;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.header p {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.policyList {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.privacyBox {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.privacyBox:hover {
+  transform: translateY(-3px);
+  background: white;
+}
+
+.privacyBox h3 {
+  color: var(--color-primary);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.privacyBox p {
+  color: #444;
+  line-height: 1.6;
+}
+
+.footerNote {
+  text-align: center;
+  margin-top: 4rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #555;
+  font-weight: 500;
+}

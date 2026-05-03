@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Core Brand Palette */
+  --color-primary: #ac3b41;      /* Main Red */
+  --color-primary-dark: #8c2a30; /* Deep Red for text/headers */
+  --color-accent-red: #7a1f1f;   /* Darkest Red for contrast */
+  --color-accent-pink: #ffb6b9;  /* Soft Pink for secondary accents */
+  
+  /* Backgrounds */
+  --color-bg-light: #fffafb;     /* Main soft white bg */
+  --color-bg-pink: #ffeaf0;      /* Subtle pink section bg */
+  
+  /* Navigation & Elements */
+  --color-nav-bg: var(--color-accent-pink);
+  --color-footer-bg: #ffeaf0;    /* Adjusted from blue to pink */
+  --color-text-dark: #444;
+
+  /* Typography */
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Form & layout dimensions */
+  --navbar-height: 80px;
+
+  /* Animations */
+  --gradient-bg: linear-gradient(135deg, #fde2e4, #e0e7ff, #e8faff, #fff1e6);
+  --gradient-anim-duration: 12s;
+
+  /* Glassmorphism cards */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --glass-backdrop: blur(14px);
+  --glass-radius: 22px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: linear-gradient(-45deg, #fff5f6, #ffeaf0, #ffb6b9, #fde2e4);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Global Floating Blobs */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+  animation: blobFloat 12s ease-in-out infinite;
+}
+
+body::before {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #ffb6b9, #ac3b41);
+  top: -100px;
+  left: -50px;
+}
+
+body::after {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #fde2e4, #ffb6b9);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -6s;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes blobFloat {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(20px, -30px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-15px, 15px) scale(0.98);
+  }
+}

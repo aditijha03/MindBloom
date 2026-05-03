@@ -1,0 +1,28 @@
+.faqContainer {
+  padding: 100px 5% 4rem;
+  background: var(--gradient-bg);
+  background-size: 200% 200%;
+  animation: softMove var(--gradient-anim-duration) ease infinite;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.header p {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.faqList {
+  max-width: 800px;
+  margin: 0 auto;
+}

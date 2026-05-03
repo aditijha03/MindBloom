@@ -1,0 +1,37 @@
+.valueCard {
+  background: var(--glass-bg, rgba(255, 255, 255, 0.75));
+  backdrop-filter: var(--glass-backdrop, blur(14px));
+  border-radius: var(--glass-radius, 22px);
+  padding: 30px;
+  text-align: center;
+  box-shadow: var(--glass-shadow, 0 20px 60px rgba(0, 0, 0, 0.12));
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.valueCard:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  background: var(--color-bg-pink);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+
+.valueCard h3 {
+  color: var(--color-primary-dark, #5a4dfc);
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.valueCard p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

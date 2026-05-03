@@ -1,0 +1,462 @@
+.container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  background: var(--color-bg-pink);
+  padding: 5px;
+  border-radius: 12px;
+  gap: 5px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--color-primary);
+  opacity: 0.7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.activeTab {
+  background: white;
+  color: var(--color-primary);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(172, 59, 65, 0.1);
+}
+
+.tab:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.content {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+  min-height: 400px;
+}
+
+/* Milestones */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.controls h3 { margin: 0; color: var(--color-primary); }
+
+.ageSelect {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-pink);
+  color: var(--color-primary);
+  font-weight: 600;
+  outline: none;
+}
+
+.progressBox {
+  margin-bottom: 2.5rem;
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.progressBar {
+  height: 10px;
+  background: var(--color-bg-pink);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.5s ease;
+}
+
+.milestoneList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.milestoneItem {
+  display: flex;
+  align-items: center; /* Changed from flex-start to center for better vertical alignment with checkbox */
+  gap: 15px;
+  padding: 18px 25px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(172, 59, 65, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left; /* Explicitly set to left */
+  justify-content: flex-start; /* Ensure items start from the left */
+}
+
+.milestoneItem:hover {
+  background: white;
+  border-color: var(--color-primary);
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(172, 59, 65, 0.05);
+}
+
+.milestoneItem input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+  flex-shrink: 0; /* Prevent checkbox from shrinking */
+}
+
+.milestoneText {
+  font-size: 1rem;
+  color: var(--color-text-dark);
+  line-height: 1.4;
+  font-weight: 500;
+  text-align: left;
+}
+
+.actionRow {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.primaryBtn, .secondaryBtn {
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.primaryBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.secondaryBtn {
+  background: var(--color-bg-pink);
+  color: var(--color-primary);
+  border: none;
+}
+
+/* Quiz */
+.quizHeader { margin-bottom: 2rem; }
+.quizHeader h3 { margin: 0; color: var(--color-primary); }
+.quizHeader p { opacity: 0.7; margin-top: 5px; }
+
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.questionCard {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.answered {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.questionMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.categoryBadge {
+  display: inline-block;
+  padding: 3px 12px;
+  background: var(--color-bg-pink);
+  color: var(--color-primary);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.questionCounter {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.questionText {
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  color: var(--color-primary);
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.optionBtn {
+  padding: 10px;
+  border: 2px solid white;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.activeOption {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+/* Result */
+.resultSection {
+  animation: fadeIn 0.5s ease;
+}
+
+.resultCard {
+  display: flex;
+  gap: 3rem;
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 3rem;
+  align-items: center;
+}
+
+.green { background: #f0fff4; border: 2px solid #c6f6d5; }
+.yellow { background: #fffaf0; border: 2px solid #feebc8; }
+.red { background: #fff5f5; border: 2px solid #fed7d7; }
+
+.scoreCircle {
+  width: 150px;
+  height: 150px;
+}
+
+.circularChart {
+  display: block;
+  margin: 10px auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.circleBg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
+.green .circle { stroke: #22c55e; }
+.yellow .circle { stroke: #f59e0b; }
+.red .circle { stroke: #ef4444; }
+
+.percentage {
+  fill: var(--color-primary);
+  font-size: 0.5rem;
+  text-anchor: middle;
+  font-weight: 700;
+}
+
+.flagHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.flagBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.green .flagBadge { background: #22c55e; color: white; }
+.yellow .flagBadge { background: #f59e0b; color: white; }
+.red .flagBadge { background: #ef4444; color: white; }
+
+.resultMeta h2 { margin: 0 0 10px 0; color: var(--color-primary); }
+.resultMessage { line-height: 1.6; color: var(--color-text-dark); opacity: 0.8; }
+
+.specialistBox {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.consultBtn {
+  background: linear-gradient(135deg, var(--color-primary), #d93d44);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(172, 59, 65, 0.2);
+  width: fit-content;
+}
+
+.consultBtn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(172, 59, 65, 0.3);
+  background: linear-gradient(135deg, #d93d44, var(--color-primary));
+}
+
+.consultBtn svg {
+  transition: transform 0.3s ease;
+}
+
+.consultBtn:hover svg {
+  transform: rotate(15deg) scale(1.1);
+}
+
+.nextSteps h3 { color: var(--color-primary); margin-bottom: 1.5rem; }
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stepCard {
+  background: var(--color-bg-pink);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.stepCard:hover {
+  transform: translateY(-3px);
+  background: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 20px rgba(172, 59, 65, 0.1);
+}
+
+.stepIconBox {
+  background: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.stepCard h4 { margin: 0 0 8px 0; color: var(--color-primary); }
+.stepCard p { margin: 0; font-size: 0.9rem; opacity: 0.8; line-height: 1.5; color: var(--color-text-dark); }
+
+.retakeBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: white;
+  border: 1.5px solid var(--color-bg-pink);
+  border-radius: 12px;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.retakeBtn:hover {
+  background: var(--color-bg-pink);
+  border-color: var(--color-primary);
+}
+
+@keyframes progress {
+  0% { stroke-dasharray: 0 100; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .resultCard {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .content { padding: 1.5rem; }
+}

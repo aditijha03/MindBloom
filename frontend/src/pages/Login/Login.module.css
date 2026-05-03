@@ -1,0 +1,172 @@
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-bg);
+  background-size: 200% 200%;
+  animation: softMove var(--gradient-anim-duration) ease infinite;
+  padding: 2rem;
+  position: relative;
+}
+
+.backBtn {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  color: var(--color-primary-dark);
+  font-weight: 500;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+.backBtn:hover {
+  background: white;
+}
+
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  padding: 3rem;
+  width: 100%;
+  max-width: 450px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h2 {
+  color: var(--color-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.errorAlert {
+  background: #fef2f2;
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: #444;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fdfdfd;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(109, 93, 252, 0.1);
+  background: white;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.eyeBtn:hover {
+  color: var(--color-primary);
+}
+
+.links {
+  text-align: right;
+  margin-bottom: 2rem;
+}
+
+.resetLink {
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+}
+
+.loginBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(109, 93, 252, 0.3);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+}

@@ -1,0 +1,271 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg-light);
+}
+
+.sidebar {
+  width: 260px;
+  background-color: #8c2a30;
+  color: #ffb6b9;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  box-shadow: 4px 0 20px rgba(140, 42, 48, 0.15);
+}
+
+.sidebarTop {
+  padding: 2rem 1.5rem;
+}
+
+.logoLink {
+  text-decoration: none;
+  color: #ffb6b9;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #ffb6b9;
+  letter-spacing: 0.5px;
+}
+
+.profileSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.profileSection:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--color-bg-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--color-primary);
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--color-primary);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #8c2a30;
+  opacity: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.profileSection:hover .editBadge {
+  opacity: 1;
+}
+
+.avatar span {
+  font-weight: 700;
+  color: #8c2a30;
+  font-size: 1.2rem;
+}
+
+.profileInfo h3 {
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 600;
+  color: #ffb6b9;
+}
+
+.profileInfo span {
+  font-size: 0.75rem;
+  color: #ffb6b9;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+}
+
+.navGroup {
+  margin-bottom: 1.5rem;
+}
+
+.groupLabel {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ffb6b9;
+  margin-bottom: 0.75rem;
+  padding-left: 0.75rem;
+  font-weight: 700;
+  opacity: 0.5;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #ffb6b9;
+  text-decoration: none;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.navIcon {
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.active .navIcon {
+  opacity: 1;
+}
+
+.navLink:hover {
+  background: rgba(255, 182, 185, 0.15);
+  color: white;
+}
+
+.navLink.active {
+  background: #ffb6b9;
+  color: #8c2a30;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sidebarBottom {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logoutBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 182, 185, 0.05);
+  border: 1px solid rgba(255, 182, 185, 0.1);
+  color: #ffb6b9;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.logoutBtn:hover {
+  background: #ffb6b9;
+  color: #8c2a30;
+}
+
+.main {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
+  background-color: var(--color-bg-light);
+}
+
+.mobileHeader {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    width: 280px;
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+  }
+
+  .mobileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: #ffb6b9;
+    color: #8c2a30;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    box-shadow: 0 2px 10px rgba(140, 42, 48, 0.1);
+  }
+
+  .logo {
+    margin-bottom: 0;
+    color: #8c2a30;
+    letter-spacing: 0.5px;
+  }
+
+  .menuToggle {
+    background: none;
+    border: none;
+    color: #8c2a30;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 99;
+  }
+
+  .main {
+    height: auto;
+  }
+}

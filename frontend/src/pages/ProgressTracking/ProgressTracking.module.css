@@ -1,0 +1,348 @@
+.container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--color-text-dark);
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.reportBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(172, 59, 65, 0.2);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+}
+
+.reportBtn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(172, 59, 65, 0.3);
+}
+
+.filterBar {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.filterGroup select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-pink);
+  font-weight: 600;
+  color: var(--color-primary);
+  outline: none;
+}
+
+.periodBadge {
+  background: var(--color-bg-pink);
+  color: var(--color-primary);
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.chartCard {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: var(--glass-border);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.iconBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.chartWrapper {
+  height: 250px;
+  width: 100%;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.reportModal {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--color-bg-pink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modalTitle h2 { margin: 0; color: var(--color-primary); font-size: 1.5rem; }
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.reportContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 3rem;
+}
+
+.reportMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  color: var(--color-text-dark);
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.reportText {
+  line-height: 1.8;
+  color: var(--color-text-dark);
+}
+
+.domainSummary {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--color-bg-pink);
+  border-radius: 12px;
+  opacity: 0.9;
+}
+
+.domainSummary h4 {
+  margin: 0 0 10px 0;
+  color: var(--color-primary);
+}
+
+.motivatingNote {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-top: 2rem;
+}
+
+.reportFooter {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-bg-pink);
+  font-size: 0.8rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.modalFooter {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--color-bg-pink);
+  display: flex;
+  justify-content: center;
+}
+
+.printBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(172, 59, 65, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.printBtn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #printable-report, #printable-report * { visibility: visible; }
+  #printable-report { position: absolute; left: 0; top: 0; width: 100%; }
+}
+
+@media (max-width: 768px) {
+  .chartsGrid { grid-template-columns: 1fr; }
+  .header { flex-direction: column; gap: 1rem; }
+  .filterBar { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+.startBtn {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.startBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(140, 42, 48, 0.3);
+  color: white;
+}
+
+/* ── Activity Log Panel ── */
+.activityLogPanel {
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+
+.activityLogTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin: 0 0 1.2rem 0;
+}
+
+.activityLogList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityLogItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.activityLogDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+.activityLogInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activityLogName {
+  font-weight: 600;
+  color: var(--color-text-dark);
+  font-size: 0.9rem;
+}
+
+.activityLogMeta {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 500;
+}

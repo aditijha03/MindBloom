@@ -1,0 +1,117 @@
+.whyUsContainer {
+  padding: 3rem 2rem;
+  background-color: var(--color-bg-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.hero {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 4rem;
+  animation: fadeIn 0.8s ease;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 5rem;
+}
+
+.featureCard {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+}
+
+.featureCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(172, 59, 65, 0.1);
+  border-color: var(--color-accent-pink);
+}
+
+.iconBox {
+  width: 70px;
+  height: 70px;
+  background: var(--color-bg-pink);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.featureCard h3 {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.featureCard p {
+  font-size: 1rem;
+  color: #777;
+  line-height: 1.5;
+}
+
+.missionSection {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  padding: 4rem 3rem;
+  border-radius: 32px;
+  text-align: center;
+  max-width: 1000px;
+  box-shadow: 0 20px 50px rgba(140, 42, 48, 0.2);
+  animation: slideUp 0.8s ease;
+}
+
+.missionSection h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.missionSection p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  opacity: 0.95;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.2rem; }
+  .featuresGrid { grid-template-columns: 1fr; }
+  .missionSection { padding: 3rem 1.5rem; }
+}
