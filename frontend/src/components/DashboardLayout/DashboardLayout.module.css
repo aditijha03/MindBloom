@@ -269,3 +269,15 @@
     height: auto;
   }
 }
+
+/* ── Page Footer (shown on all dashboard pages except /dashboard) ── */
+.pageFooter {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  font-size: 0.82rem;
+  color: var(--color-text-dark);
+  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px dashed var(--color-accent-pink);
+  margin-top: 2rem;
+}

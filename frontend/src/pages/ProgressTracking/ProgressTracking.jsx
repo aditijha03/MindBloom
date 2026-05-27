@@ -23,7 +23,8 @@ import {
   Printer,
   Calendar,
   ChevronRight,
-  Activity
+  Activity,
+  CheckCircle2
 } from 'lucide-react';
 import { useAssessments } from '../../hooks/useAssessments';
 import { SCREENING_QUIZ } from '../../data/screening';

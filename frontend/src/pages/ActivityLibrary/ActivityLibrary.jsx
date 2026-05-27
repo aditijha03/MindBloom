@@ -11,13 +11,15 @@ import { ACTIVITIES_DB } from '../../data/activities';
 import { useSaveAssessment } from '../../hooks/useAssessments';
 import styles from './ActivityLibrary.module.css';
 
-const skills = ['All', 'Speech & Language', 'Gross & Fine Motor', 'Social & Emotional', 'Cognitive / Thinking', 'Sensory'];
+const skills = ['All', 'Speech & Language', 'Gross & Fine Motor', 'Social & Emotional', 'Cognitive / Thinking', 'Sensory', 'Behavior & Self-Regulation'];
 const ages = ['All', '0-2', '3-5', '6-8'];
+const concerns = ['All', 'Autism', 'ADHD', 'Dyslexia', 'Dyscalculia', 'Dysgraphia', 'Childhood Depression', 'Oppositional Defiant Disorder', 'Childhood Anxiety Disorders'];
 
 export default function ActivityLibrary() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSkill, setSelectedSkill] = useState('All');
   const [selectedAge, setSelectedAge] = useState('All');
+  const [selectedConcern, setSelectedConcern] = useState('All');
   const [expandedId, setExpandedId] = useState(null);
   const [doneIds, setDoneIds] = useState(new Set());
   const { mutate: saveAssessment } = useSaveAssessment();
@@ -36,9 +38,10 @@ export default function ActivityLibrary() {
                           act.skill.toLowerCase().includes(searchTerm.toLowerCase());
       const matchSkill = selectedSkill === 'All' || act.skill === selectedSkill;
       const matchAge = selectedAge === 'All' || act.age === selectedAge;
-      return matchSearch && matchSkill && matchAge;
+      const matchConcern = selectedConcern === 'All' || act.concern === selectedConcern;
+      return matchSearch && matchSkill && matchAge && matchConcern;
     });
-  }, [searchTerm, selectedSkill, selectedAge]);
+  }, [searchTerm, selectedSkill, selectedAge, selectedConcern]);
 
   const toggleExpand = (id) => {
     setExpandedId(prev => prev === id ? null : id);
@@ -85,10 +88,44 @@ export default function ActivityLibrary() {
           <Search size={20} className={styles.searchIcon} />
         </div>
 
-        {/* ... (filters) */}
-      </section>
+        <div className={styles.dropdownFilters}>
+          <select 
+            value={selectedAge} 
+            onChange={(e) => setSelectedAge(e.target.value)}
+            className={styles.filterSelect}
+          >
+            {ages.map(age => <option key={age} value={age}>{age === 'All' ? 'All Ages' : `${age} yrs`}</option>)}
+          </select>
 
-      {/* ... (resultsBar) */}
+          <select 
+            value={selectedSkill} 
+            onChange={(e) => setSelectedSkill(e.target.value)}
+            className={styles.filterSelect}
+          >
+            {skills.map(skill => <option key={skill} value={skill}>{skill === 'All' ? 'All Skills' : skill}</option>)}
+          </select>
+
+          <select 
+            value={selectedConcern} 
+            onChange={(e) => setSelectedConcern(e.target.value)}
+            className={styles.filterSelect}
+          >
+            {concerns.map(c => <option key={c} value={c}>{c === 'All' ? 'All Focus Areas' : c}</option>)}
+          </select>
+
+          <button 
+            className={styles.resetBtn}
+            onClick={() => {
+              setSearchTerm('');
+              setSelectedAge('All');
+              setSelectedSkill('All');
+              setSelectedConcern('All');
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
+      </section>
 
       <div className={styles.activitiesGrid}>
         {filteredActivities.length > 0 ? (
@@ -103,6 +140,7 @@ export default function ActivityLibrary() {
                   <div className={styles.cardMeta}>
                     <span className={styles.ageBadge}>{act.age} yrs</span>
                     <span className={styles.skillLabel}>{act.skill}</span>
+                    {act.concern && <span className={styles.concernLabel}>{act.concern}</span>}
                   </div>
                   <h3 className={styles.actName}>{act.name}</h3>
                 </div>

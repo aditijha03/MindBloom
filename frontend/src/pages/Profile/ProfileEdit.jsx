@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Camera, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { useUpdateProfile, useUploadAvatar, useMe } from '../../hooks/useProfile';
 import useAuthStore from '../../store/authStore';
+import useProfileStore from '../../store/profileStore';
 import { useQuiz } from '../../context/QuizContext';
 import styles from './Profile.module.css';
 
@@ -11,10 +12,14 @@ export default function ProfileEdit() {
   const { data: apiProfile } = useMe();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: uploadAvatar, isPending: isUploading } = useUploadAvatar();
+  const { profiles, addProfile, setProfiles, getActiveProfile } = useProfileStore();
   const { result } = useQuiz();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAdding = location.state?.isAdding;
 
   const [formData, setFormData] = useState({
+    id: crypto.randomUUID(),
     name: '',
     age: '',
     gender: 'Prefer not to say',
@@ -23,16 +28,20 @@ export default function ProfileEdit() {
     email: user?.email || '',
     concerns: apiProfile?.bio || '',
     medical: '',
-    avatar: apiProfile?.avatar_url || null
+    avatar: null
   });
 
   const [toast, setToast] = useState('');
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('mbChildProfile')) || {};
-    setFormData(prev => ({ ...prev, ...saved }));
-  }, []);
+    if (!isAdding) {
+      const active = getActiveProfile();
+      if (active) {
+        setFormData(prev => ({ ...prev, ...active }));
+      }
+    }
+  }, [isAdding, getActiveProfile]);
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -65,8 +74,15 @@ export default function ProfileEdit() {
         bio: formData.concerns
       });
 
-      // Child-specific data remains in local storage for now
-      localStorage.setItem('mbChildProfile', JSON.stringify(formData));
+      // Manage multiple child profiles
+      if (isAdding) {
+        addProfile(formData);
+      } else {
+        const updatedProfiles = profiles.map(p => 
+          (p.id === formData.id || p.name === formData.name) ? formData : p
+        );
+        setProfiles(updatedProfiles);
+      }
       
       setToast(
         <div className={styles.toastContent}>

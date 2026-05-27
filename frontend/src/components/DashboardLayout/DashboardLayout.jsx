@@ -57,7 +57,6 @@ export default function DashboardLayout() {
         { to: '/screening', label: 'Screening', icon: Search },
         { to: '/progress', label: 'Progress', icon: LineChart },
         { to: '/weekly', label: 'Weekly Plan', icon: Calendar },
-        { to: '/parent', label: 'Parent Guidance', icon: Heart },
       ]
     },
     {
@@ -135,6 +134,9 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <main className={styles.main}>
         <Outlet />
+        <footer className={styles.pageFooter}>
+          MindBloom &copy; 2025 &nbsp;|&nbsp; Always consult a qualified paediatrician or specialist for personalised advice.
+        </footer>
       </main>
 
       {/* Overlay for mobile menu */}

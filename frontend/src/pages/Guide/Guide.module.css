@@ -1,11 +1,11 @@
+/* ── Container (matches project pattern: About, Services, FAQ) ── */
 .guideContainer {
   padding: 4rem 5%;
   background: var(--gradient-bg);
-  background-size: 200% 200%;
-  animation: softMove var(--gradient-anim-duration) ease infinite;
   min-height: calc(100vh - var(--navbar-height));
 }
 
+/* ── Hero / Header ── */
 .header {
   text-align: center;
   margin-bottom: 4rem;
@@ -13,73 +13,495 @@
   padding: 3rem;
   border-radius: var(--glass-radius);
   box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 200px; height: 200px;
+  background: rgba(172, 59, 65, 0.08);
+  border-radius: 50%;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -70px; right: -40px;
+  width: 240px; height: 240px;
+  background: rgba(255, 182, 185, 0.2);
+  border-radius: 50%;
 }
 
 .header h1 {
   font-size: 2.5rem;
   color: var(--color-primary-dark);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
+.header p {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 580px;
+  margin: 0.5rem auto 0;
+  position: relative;
+  z-index: 1;
+}
+
+.bubbles {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.bubble {
+  background: white;
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid var(--color-accent-pink);
+  color: var(--color-primary);
+  transition: all 0.2s ease;
+}
+
+.bubbleAlt {
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+/* ── Section Nav ── */
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.9rem 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  flex-wrap: wrap;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-radius: var(--glass-radius);
+  margin-bottom: 2rem;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text-dark);
+  opacity: 0.7;
+}
+
+.navButton:hover {
+  background: var(--color-bg-pink);
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+.navButtonActive {
+  background: var(--color-primary);
+  color: white;
+  opacity: 1;
+}
+
+/* ── Section wrapper ── */
 .section {
-  margin-bottom: 4rem;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0 0 2.5rem;
+  max-width: 920px;
+  margin: 0 auto;
 }
 
-.section h2 {
+.secTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--color-accent-pink);
-  padding-bottom: 10px;
+  text-align: center;
 }
 
-.pillarList, .redFlagList {
+.secSubtitle {
+  text-align: center;
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 1.3rem;
+}
+
+/* ── Milestones ── */
+.milestoneRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
   background: var(--glass-bg);
-  padding: 2rem 3rem;
-  border-radius: var(--glass-radius);
-  box-shadow: var(--glass-shadow);
-  line-height: 1.8;
-  font-size: 1.1rem;
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 16px;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease;
 }
 
-.disordersGrid {
+.milestoneRow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(172, 59, 65, 0.08);
+}
+
+.mAge {
+  background: var(--color-primary);
+  color: white;
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  min-width: 75px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mBody h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.mBody p {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.3rem;
+  line-height: 1.6;
+}
+
+/* ── Domains (Card Grid) ── */
+.cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
-.disorderCard {
-  background: white;
-  padding: 2rem;
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
   border-radius: var(--glass-radius);
-  box-shadow: var(--glass-shadow);
-  position: relative;
-  transition: transform 0.3s ease;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid var(--color-accent-pink);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(172, 59, 65, 0.1);
+}
+
+.cardAlt {
+  border-left-color: var(--color-primary);
+}
+
+.card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 0.5rem;
+}
+
+.card p {
+  font-size: 0.87rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Disorders ── */
+.disorderCard {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .disorderCard:hover {
-  transform: translateY(-5px);
-}
-
-.categoryTag {
-  display: inline-block;
-  background: var(--color-accent-blue);
-  color: var(--color-primary-dark);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 10px;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(172, 59, 65, 0.1);
 }
 
 .disorderCard h3 {
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
 }
 
-.disorderCard p {
-  color: #666;
-  font-size: 0.95rem;
+.catBadge {
+  font-size: 0.7rem;
+  background: var(--color-bg-pink);
+  color: var(--color-primary);
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.disorderBody {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--color-accent-pink);
+}
+
+.disorderBody p {
+  font-size: 0.86rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.disCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.disColTitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.disColTitleSigns {
+  color: var(--color-primary);
+}
+
+.disColTitleSupport {
+  color: var(--color-accent-red);
+}
+
+.disTag {
+  display: block;
+  border-radius: 10px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.79rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.disTagSign {
+  background: var(--color-bg-pink);
+  border: 1px solid var(--color-accent-pink);
+  color: var(--color-primary);
+}
+
+.disTagSupport {
+  background: rgba(255, 234, 240, 0.5);
+  border: 1px solid var(--color-accent-pink);
+  color: var(--color-accent-red);
+}
+
+/* ── Tips ── */
+.tipsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.tipCard {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 16px;
+  padding: 1.2rem;
+  border-left: 4px solid var(--color-primary);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.tipCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(172, 59, 65, 0.1);
+}
+
+.tipCardAlt {
+  border-left-color: var(--color-accent-pink);
+}
+
+.tipCard h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 0.4rem;
+}
+
+.tipCardAlt h4 {
+  color: var(--color-primary-dark);
+}
+
+.tipCard p {
+  font-size: 0.83rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Flashcards ── */
+.factsWrap {
+  max-width: 600px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.flashcard {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  border-radius: var(--glass-radius);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.cardBack {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, var(--color-bg-pink), white);
+  border: 2px solid var(--color-accent-pink);
+}
+
+.cardFact {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  line-height: 1.5;
+}
+
+.cardFact span {
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.cardDetail {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.cardDetail span {
+  display: block;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.8rem;
+}
+
+.flipHint {
+  position: absolute;
+  bottom: 1.2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cardControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.navBtn {
+  background: white;
+  border: 2px solid var(--color-bg-pink);
+  color: var(--color-primary);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cardCounter {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  .disCols {
+    grid-template-columns: 1fr;
+  }
+  .factsWrap {
+    padding: 0 1rem;
+  }
 }

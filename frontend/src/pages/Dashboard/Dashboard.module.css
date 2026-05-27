@@ -36,6 +36,12 @@
   max-width: 500px;
 }
 
+.welcomeActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .dateBadge {
   background: white;
   padding: 10px 20px;
@@ -43,6 +49,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   font-weight: 600;
   color: var(--color-primary);
+  white-space: nowrap;
 }
 
 /* Stats Grid */
@@ -275,6 +282,43 @@
   font-size: 0.9rem;
   display: inline-block;
   margin-top: 1rem;
+}
+
+/* Articles on Dashboard */
+.articlesCard {
+  margin-top: 1rem;
+}
+
+.articlesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.articleLink h4 {
+  margin: 0 0 8px 0;
+  color: var(--color-primary-dark);
+  font-size: 1.1rem;
+}
+
+.articleLink p {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.articleLink a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .articlesGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 992px) {

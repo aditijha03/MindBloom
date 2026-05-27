@@ -15,11 +15,13 @@ import {
   RefreshCcw,
   LayoutDashboard,
   ChevronLeft,
-  Activity
+  Activity,
+  Sparkles
 } from 'lucide-react';
 import { useQuiz } from '../../context/QuizContext';
 import { useSaveAssessment } from '../../hooks/useAssessments';
 import useAuthStore from '../../store/authStore';
+import api from '../../api/client';
 import styles from './Quiz.module.css';
 
 const allQuestions = [
@@ -39,6 +41,7 @@ export default function Quiz() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [localResult, setLocalResult] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setResult } = useQuiz();
   const user = useAuthStore(state => state.user);
@@ -59,7 +62,43 @@ export default function Quiz() {
     }
   };
 
-  const calculateResult = (finalAnswers) => {
+  const calculateResult = async (finalAnswers) => {
+    setLoading(true);
+
+    // Format responses for prompt context (Question Label -> Answer)
+    const formattedResponses = {};
+    allQuestions.forEach((q, idx) => {
+      formattedResponses[q.label] = finalAnswers[idx + 1];
+    });
+
+    try {
+      const { data } = await api.post('/assessments/analyze', {
+        type: 'quiz',
+        responses: formattedResponses
+      });
+
+      const { analysis } = data.data;
+
+      const res = {
+        score: analysis.score,
+        text: analysis.summary,
+        // map 'warning' to 'moderate' to match frontend styling categories
+        type: analysis.resultType === 'warning' ? 'moderate' : analysis.resultType,
+        recommendations: analysis.recommendations || []
+      };
+
+      setLocalResult(res);
+      setResult(res);
+      setStep(totalQuestions + 1);
+    } catch (error) {
+      console.error('AI assessment analysis failed, running local fallback:', error);
+      runLocalFallback(finalAnswers);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runLocalFallback = (finalAnswers) => {
     let scoreCount = 0;
     allQuestions.forEach((q, idx) => {
       const answer = finalAnswers[idx + 1];
@@ -83,12 +122,21 @@ export default function Quiz() {
       text = 'Your child is doing well, but there are a few areas that could benefit from extra attention and guided play activities.';
     }
 
-    const res = { score, text, type };
+    const res = { 
+      score, 
+      text, 
+      type,
+      recommendations: [
+        "Review child development milestones with a pediatrician.",
+        "Engage in daily interactive reading and conversation.",
+        "Provide opportunities for cooperative play with peers."
+      ]
+    };
     setLocalResult(res);
     setResult(res);
     setStep(totalQuestions + 1);
 
-    // Save to backend if user is logged in
+    // Save to backend if user is logged in (since API call failed/was skipped)
     if (user) {
       saveAssessment({
         score,
@@ -153,106 +201,134 @@ export default function Quiz() {
       </div>
 
       <div className={styles.quizCard}>
-        {/* Step 0: Intro */}
-        {step === 0 && (
-          <div className={styles.introStep}>
-            <div className={styles.introIcon}>
-              <Activity size={48} color="#8c2a30" />
-            </div>
-            <h2>Quick Milestone Check</h2>
-            <p>This short quiz helps you understand your child's emotional and social development.</p>
-            <ul className={styles.infoList}>
-              <li><ClipboardList size={18} /> {totalQuestions} simple Yes/No questions</li>
-              <li><Clock size={18} /> Takes about 2 minutes</li>
-              <li><ShieldCheck size={18} /> Your answers stay private</li>
-              <li><BarChart3 size={18} /> Get instant guidance</li>
-            </ul>
-            <button onClick={() => setStep(1)} className={styles.startBtn}>Begin Assessment</button>
+        {loading ? (
+          <div className={styles.loadingStep}>
+            <Brain size={48} className={styles.spinnerIcon} />
+            <h3>MindBloom AI is analyzing...</h3>
+            <p>Our developmental intelligence engine is evaluating your answers.</p>
           </div>
-        )}
-
-        {/* Steps 1..N: Questions */}
-        {currentQ && (
-          <div className={styles.questionStep}>
-            <div className={styles.questionMeta}>
-              <span className={styles.categoryBadge}>
-                {getCategoryIcon(currentQ.category)}
-                <span className={styles.catLabel}>{currentQ.category}</span>
-              </span>
-              <span className={styles.counter}>
-                Question {step} of {totalQuestions}
-              </span>
-            </div>
-
-            <h2 className={styles.questionText}>{currentQ.label}</h2>
-
-            <div className={styles.answerBtns}>
-              <button
-                className={`${styles.answerBtn} ${styles.yesBtn}`}
-                onClick={() => handleAnswer('yes')}
-              >
-                <Check size={20} />
-                <span>Yes</span>
-              </button>
-              <button
-                className={`${styles.answerBtn} ${styles.noBtn}`}
-                onClick={() => handleAnswer('no')}
-              >
-                <X size={20} />
-                <span>No</span>
-              </button>
-            </div>
-
-            {step > 1 && (
-              <button className={styles.backBtn} onClick={() => setStep(step - 1)}>
-                <ChevronLeft size={18} />
-                <span>Previous Question</span>
-              </button>
+        ) : (
+          <>
+            {/* Step 0: Intro */}
+            {step === 0 && (
+              <div className={styles.introStep}>
+                <div className={styles.introIcon}>
+                  <Activity size={48} color="#8c2a30" />
+                </div>
+                <h2>Quick Milestone Check</h2>
+                <p>This short quiz helps you understand your child's emotional and social development.</p>
+                <ul className={styles.infoList}>
+                  <li><ClipboardList size={18} /> {totalQuestions} simple Yes/No questions</li>
+                  <li><Clock size={18} /> Takes about 2 minutes</li>
+                  <li><ShieldCheck size={18} /> Your answers stay private</li>
+                  <li><BarChart3 size={18} /> Get instant guidance</li>
+                </ul>
+                <button onClick={() => setStep(1)} className={styles.startBtn}>Begin Assessment</button>
+              </div>
             )}
-          </div>
-        )}
 
-        {/* Final: Result */}
-        {localResult && step > totalQuestions && (
-          <div className={styles.resultStep}>
-            <div className={styles.scoreCircle}>
-              <svg viewBox="0 0 120 120" className={styles.scoreSvg}>
-                <circle cx="60" cy="60" r="52" className={styles.scoreTrack} />
-                <circle
-                  cx="60" cy="60" r="52"
-                  className={`${styles.scoreFill} ${localResult.type === 'alert' ? styles.fillAlert :
-                      localResult.type === 'moderate' ? styles.fillModerate : styles.fillFine
-                    }`}
-                  strokeDasharray={`${localResult.score * 3.27} 327`}
-                />
-              </svg>
-              <span className={styles.scoreValue}>{localResult.score}%</span>
-            </div>
+            {/* Steps 1..N: Questions */}
+            {currentQ && (
+              <div className={styles.questionStep}>
+                <div className={styles.questionMeta}>
+                  <span className={styles.categoryBadge}>
+                    {getCategoryIcon(currentQ.category)}
+                    <span className={styles.catLabel}>{currentQ.category}</span>
+                  </span>
+                  <span className={styles.counter}>
+                    Question {step} of {totalQuestions}
+                  </span>
+                </div>
 
-            <div className={`${styles.resultBox} ${localResult.type === 'alert' ? styles.alert :
-                localResult.type === 'moderate' ? styles.moderate : styles.fine
-              }`}>
-              <p>{localResult.text}</p>
-            </div>
+                <h2 className={styles.questionText}>{currentQ.label}</h2>
 
-            <div className={styles.resultActions}>
-              <button onClick={handleRetake} className={styles.retakeBtn}>
-                <RefreshCcw size={18} />
-                <span>Retake Quiz</span>
-              </button>
-              {user ? (
-                <button onClick={() => navigate('/dashboard')} className={styles.dashBtn}>
-                  <LayoutDashboard size={18} />
-                  <span>View Dashboard</span>
-                </button>
-              ) : (
-                <button onClick={() => navigate('/signup')} className={styles.dashBtn}>
-                  <LayoutDashboard size={18} />
-                  <span>Sign up to track progress</span>
-                </button>
-              )}
-            </div>
-          </div>
+                <div className={styles.answerBtns}>
+                  <button
+                    className={`${styles.answerBtn} ${styles.yesBtn}`}
+                    onClick={() => handleAnswer('yes')}
+                  >
+                    <Check size={20} />
+                    <span>Yes</span>
+                  </button>
+                  <button
+                    className={`${styles.answerBtn} ${styles.noBtn}`}
+                    onClick={() => handleAnswer('no')}
+                  >
+                    <X size={20} />
+                    <span>No</span>
+                  </button>
+                </div>
+
+                {step > 1 && (
+                  <button className={styles.backBtn} onClick={() => setStep(step - 1)}>
+                    <ChevronLeft size={18} />
+                    <span>Previous Question</span>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Final: Result */}
+            {localResult && step > totalQuestions && (
+              <div className={styles.resultStep}>
+                <div className={styles.scoreCircle}>
+                  <svg viewBox="0 0 120 120" className={styles.scoreSvg}>
+                    <circle cx="60" cy="60" r="52" className={styles.scoreTrack} />
+                    <circle
+                      cx="60" cy="60" r="52"
+                      className={`${styles.scoreFill} ${localResult.type === 'alert' ? styles.fillAlert :
+                          localResult.type === 'moderate' ? styles.fillModerate : styles.fillFine
+                        }`}
+                      strokeDasharray={`${localResult.score * 3.27} 327`}
+                    />
+                  </svg>
+                  <span className={styles.scoreValue}>{localResult.score}%</span>
+                </div>
+
+                <div className={`${styles.resultBox} ${localResult.type === 'alert' ? styles.alert :
+                    localResult.type === 'moderate' ? styles.moderate : styles.fine
+                  }`}>
+                  <p>{localResult.text}</p>
+                </div>
+
+                {/* AI Recommendations */}
+                {localResult.recommendations && localResult.recommendations.length > 0 && (
+                  <div>
+                    <h3 className={styles.recommendationsTitle}>
+                      <Sparkles size={18} style={{ marginRight: '6px', verticalAlign: 'middle', display: 'inline' }} />
+                      AI Recommended Activities
+                    </h3>
+                    <div className={styles.recommendationsList}>
+                      {localResult.recommendations.map((rec, idx) => (
+                        <div key={idx} className={styles.recCard}>
+                          <Sparkles size={16} className={styles.recCardIcon} />
+                          <div className={styles.recCardText}>{rec}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className={styles.resultActions}>
+                  <button onClick={handleRetake} className={styles.retakeBtn}>
+                    <RefreshCcw size={18} />
+                    <span>Retake Quiz</span>
+                  </button>
+                  {user ? (
+                    <button onClick={() => navigate('/dashboard')} className={styles.dashBtn}>
+                      <LayoutDashboard size={18} />
+                      <span>View Dashboard</span>
+                    </button>
+                  ) : (
+                    <button onClick={() => navigate('/signup')} className={styles.dashBtn}>
+                      <LayoutDashboard size={18} />
+                      <span>Sign up to track progress</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

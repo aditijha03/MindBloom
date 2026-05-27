@@ -4,8 +4,6 @@
   align-items: center;
   justify-content: center;
   background: var(--gradient-bg);
-  background-size: 200% 200%;
-  animation: softMove var(--gradient-anim-duration) ease infinite;
   padding: 2rem;
   position: relative;
 }

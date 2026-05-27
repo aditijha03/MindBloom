@@ -165,5 +165,87 @@ export const ACTIVITIES_DB = [
     steps: 'Lay down and place a toy on their belly. Watch the toy rise and fall as they take slow, deep breaths.',
     tips: 'Try doing this for 2 minutes before bedtime.',
     outcome: 'Teaches techniques for managing anxiety and stress.'
+  },
+  
+  // Specialised Support Activities
+  {
+    id: 'act19',
+    name: 'Sensory Safe Space',
+    age: '3-5',
+    skill: 'Sensory',
+    concern: 'Autism',
+    steps: 'Create a quiet tent or corner with dim lighting, weighted blankets, and noise-cancelling headphones. Allow your child to retreat here when overwhelmed.',
+    tips: 'Do not force interaction when they are in their safe space. Let them initiate when ready.',
+    outcome: 'Provides a reliable coping mechanism for sensory overload, particularly beneficial for autism support.'
+  },
+  {
+    id: 'act20',
+    name: 'High-Energy Obstacle Course',
+    age: '6-8',
+    skill: 'Behavior & Self-Regulation',
+    concern: 'ADHD',
+    steps: 'Set up an indoor or outdoor obstacle course using cushions, chairs, and ropes. Time them as they navigate through it.',
+    tips: 'Channel hyperactive energy into structured tasks. Use a timer to make it a fun challenge.',
+    outcome: 'Helps burn excess energy and improves focus and motor planning, ideal for ADHD.'
+  },
+  {
+    id: 'act21',
+    name: 'Multisensory Letter Tracing',
+    age: '6-8',
+    skill: 'Cognitive / Thinking',
+    concern: 'Dyslexia',
+    steps: 'Use shaving cream on a tray or sandpaper letters. Have your child trace letters while saying the sound the letter makes out loud.',
+    tips: 'Engaging touch, sight, and hearing simultaneously reinforces neural pathways for reading.',
+    outcome: 'Strengthens letter-sound associations, supporting children with dyslexia.'
+  },
+  {
+    id: 'act22',
+    name: 'Physical Number Line',
+    age: '6-8',
+    skill: 'Cognitive / Thinking',
+    concern: 'Dyscalculia',
+    steps: 'Draw a large number line on the driveway with chalk. Ask math questions and have them physically jump to the correct number.',
+    tips: 'Connecting physical movement to abstract math concepts makes numbers more tangible.',
+    outcome: 'Improves spatial understanding of numbers and basic arithmetic, aiding dyscalculia.'
+  },
+  {
+    id: 'act23',
+    name: 'Clay Pinch & Roll',
+    age: '6-8',
+    skill: 'Gross & Fine Motor',
+    concern: 'Dysgraphia',
+    steps: 'Provide tough modelling clay or putty. Have your child pinch off small pieces, roll them into balls, and squash them.',
+    tips: 'Focus on using the thumb, index, and middle fingers to build tripod grip strength.',
+    outcome: 'Builds hand and finger strength essential for handwriting, supporting dysgraphia.'
+  },
+  {
+    id: 'act24',
+    name: 'Joy Jar Journaling',
+    age: '6-8',
+    skill: 'Social & Emotional',
+    concern: 'Childhood Depression',
+    steps: 'Keep a special jar and decorate it. Each evening, write or draw one good thing that happened that day and put it in the jar.',
+    tips: 'On tough days, open the jar and read past entries together to remind them of happy moments.',
+    outcome: 'Encourages positive focus and emotional reflection, helping manage depressive symptoms.'
+  },
+  {
+    id: 'act25',
+    name: 'The "Two Good Choices" Game',
+    age: '3-5',
+    skill: 'Behavior & Self-Regulation',
+    concern: 'Oppositional Defiant Disorder',
+    steps: 'Instead of commands, offer two acceptable choices (e.g., "Do you want to put on your red shoes or blue shoes?").',
+    tips: 'This provides a sense of control and autonomy, reducing the urge to argue or refuse.',
+    outcome: 'Reduces power struggles and fosters cooperation, highly effective for ODD tendencies.'
+  },
+  {
+    id: 'act26',
+    name: 'Worry Monster Box',
+    age: '6-8',
+    skill: 'Behavior & Self-Regulation',
+    concern: 'Childhood Anxiety Disorders',
+    steps: 'Create a "Worry Monster" out of a tissue box. Have your child write down their worries and "feed" them to the monster.',
+    tips: 'Acknowledge the worry without amplifying it. Explain the monster is eating it so they do not have to carry it.',
+    outcome: 'Externalises anxiety, making it easier to discuss and let go of fears.'
   }
 ];

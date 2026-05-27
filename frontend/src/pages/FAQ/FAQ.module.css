@@ -1,8 +1,6 @@
 .faqContainer {
   padding: 100px 5% 4rem;
   background: var(--gradient-bg);
-  background-size: 200% 200%;
-  animation: softMove var(--gradient-anim-duration) ease infinite;
   min-height: calc(100vh - var(--navbar-height));
 }
 

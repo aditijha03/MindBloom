@@ -514,3 +514,129 @@
   .dayShort { display: none; }
   .dayFull { display: block; font-size: 0.75rem; font-weight: 700; color: var(--color-primary); }
 }
+
+/* Reminders Section */
+.reminderCard {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.reminderDesc {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.reminderForm {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.timeInput {
+  width: 120px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.addBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.addBtn:hover { transform: scale(1.05); }
+
+.reminderList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reminderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+}
+
+.rInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rTime {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #fce7f3;
+}
+
+.rText {
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.delBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.delBtn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.emptyReminders {
+  text-align: center;
+  padding: 20px;
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.9rem;
+}

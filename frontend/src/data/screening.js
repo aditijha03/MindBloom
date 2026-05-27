@@ -111,5 +111,53 @@ export const SCREENING_QUIZ = [
     category: 'Cognitive',
     question: "Can your child sort objects by basic shapes or colors?",
     options: ["Consistently", "Most of the time", "Sometimes", "Rarely"]
+  },
+  {
+    id: 11,
+    category: 'Developmental',
+    question: "Does your child often avoid eye contact, repeat specific movements, or become highly upset by minor routine changes? (Autism Screening)",
+    options: ["Rarely or never", "Sometimes", "Often", "Almost always"]
+  },
+  {
+    id: 12,
+    category: 'Attention',
+    question: "How often does your child have significant difficulty sustaining attention or seem unable to sit still? (ADHD Screening)",
+    options: ["Rarely or never", "Sometimes", "Often", "Almost always"]
+  },
+  {
+    id: 13,
+    category: 'Learning',
+    question: "Does your child struggle significantly with recognizing letters or reading words compared to peers? (Dyslexia Screening)",
+    options: ["No difficulty", "Mild difficulty", "Moderate difficulty", "Severe difficulty"]
+  },
+  {
+    id: 14,
+    category: 'Learning',
+    question: "Does your child have unusual difficulty understanding number concepts or basic math? (Dyscalculia Screening)",
+    options: ["No difficulty", "Mild difficulty", "Moderate difficulty", "Severe difficulty"]
+  },
+  {
+    id: 15,
+    category: 'Learning',
+    question: "How much difficulty does your child experience with handwriting, such as forming letters or holding a pencil? (Dysgraphia Screening)",
+    options: ["No difficulty", "Mild difficulty", "Moderate difficulty", "Severe difficulty"]
+  },
+  {
+    id: 16,
+    category: 'Emotional',
+    question: "Does your child frequently appear sad, irritable, or show a loss of interest in activities they used to enjoy? (Childhood Depression Screening)",
+    options: ["Rarely or never", "Sometimes", "Often", "Almost always"]
+  },
+  {
+    id: 17,
+    category: 'Behavioural',
+    question: "How often does your child lose their temper, argue with adults, or deliberately refuse to comply with rules? (Oppositional Defiant Disorder Screening)",
+    options: ["Rarely or never", "Sometimes", "Often", "Almost always"]
+  },
+  {
+    id: 18,
+    category: 'Emotional',
+    question: "Does your child exhibit excessive worry, fear, or physical symptoms when facing everyday situations? (Childhood Anxiety Disorders Screening)",
+    options: ["Rarely or never", "Sometimes", "Often", "Almost always"]
   }
 ];

@@ -8,11 +8,14 @@ import {
   CheckCircle2,
   AlertCircle,
   Clock,
-  UserPlus
+  UserPlus,
+  Brain,
+  Sparkles
 } from 'lucide-react';
 import { MILESTONES_DB, SCREENING_QUIZ } from '../../data/screening';
 import { useQuiz } from '../../context/QuizContext';
 import { useSaveAssessment } from '../../hooks/useAssessments';
+import api from '../../api/client';
 import styles from './ScreeningModule.module.css';
 
 import { useLocation, Link } from 'react-router-dom';
@@ -28,6 +31,7 @@ export default function ScreeningModule() {
   const [checkedMilestones, setCheckedMilestones] = useState({});
   const [quizAnswers, setQuizAnswers] = useState({});
   const [finalResult, setFinalResult] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { setResult } = useQuiz();
   const { mutate: saveAssessment } = useSaveAssessment();
 
@@ -45,12 +49,54 @@ export default function ScreeningModule() {
     setQuizAnswers(prev => ({...prev, [id]: opt}));
   };
 
-  const calculateScore = () => {
+  const calculateScore = async () => {
     if (Object.keys(quizAnswers).length < SCREENING_QUIZ.length) {
       alert("Please answer all questions before submitting.");
       return;
     }
 
+    setLoading(true);
+
+    // Format questionnaire answers
+    const formattedResponses = {};
+    SCREENING_QUIZ.forEach(q => {
+      formattedResponses[q.question] = quizAnswers[q.id] || "Not answered";
+    });
+
+    try {
+      const { data } = await api.post('/assessments/analyze', {
+        type: 'screening',
+        responses: formattedResponses,
+        ageGroup,
+        milestones: checkedMilestones
+      });
+
+      const { analysis } = data.data;
+
+      setFinalResult({
+        score: analysis.score,
+        flag: analysis.resultType === 'fine' ? 'Green' : (analysis.resultType === 'warning' ? 'Yellow' : 'Red'),
+        message: analysis.summary,
+        recommendations: analysis.recommendations || []
+      });
+
+      if (setResult) {
+        setResult({
+          score: analysis.score,
+          text: analysis.summary,
+          type: analysis.resultType === 'fine' ? 'fine' : (analysis.resultType === 'warning' ? 'moderate' : 'alert')
+        });
+      }
+      setActiveTab('result');
+    } catch (err) {
+      console.error("AI screening analysis failed, using local calculation fallback:", err);
+      calculateScoreFallback();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateScoreFallback = () => {
     let totalPoints = 0;
     const maxPoints = SCREENING_QUIZ.length * 3;
 
@@ -77,7 +123,16 @@ export default function ScreeningModule() {
       message = 'Your child is doing well, but there are a few areas that could benefit from extra attention and guided play activities.';
     }
     
-    setFinalResult({ score, flag, message });
+    setFinalResult({ 
+      score, 
+      flag, 
+      message,
+      recommendations: [
+        "Review child development milestones with a pediatrician.",
+        "Engage in daily interactive reading and conversation.",
+        "Provide opportunities for cooperative play with peers."
+      ]
+    });
     if (setResult) setResult({ score, text: message, type: flag === 'Green' ? 'fine' : (flag === 'Yellow' ? 'moderate' : 'alert') });
     setActiveTab('result');
 
@@ -118,7 +173,15 @@ export default function ScreeningModule() {
       </header>
 
       <main className={styles.content}>
-        {activeTab === 'milestones' && (
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <Brain size={48} className={styles.spinnerIcon} />
+            <h3>Analyzing Screening Profile...</h3>
+            <p>Our developmental intelligence engine is evaluating your answers and checked milestones to produce a detailed assessment.</p>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'milestones' && (
           <section className={styles.milestoneSection}>
             <div className={styles.controls}>
               <h3>Milestones for {ageGroup} years</h3>
@@ -165,7 +228,7 @@ export default function ScreeningModule() {
           <section className={styles.quizSection}>
             <div className={styles.quizHeader}>
               <h3>Developmental Questionnaire</h3>
-              <p>Answer these 10 questions to help us assess your child's social, communication, behavioural, emotional, and cognitive development.</p>
+              <p>Answer these {SCREENING_QUIZ.length} questions to help us assess your child's development, including social, communication, learning, and emotional well-being.</p>
             </div>
 
             <div className={styles.questionList}>
@@ -234,6 +297,24 @@ export default function ScreeningModule() {
               </div>
             </div>
 
+            {/* AI Recommendations */}
+            {finalResult.recommendations && finalResult.recommendations.length > 0 && (
+              <div>
+                <h3 className={styles.recommendationsTitle}>
+                  <Sparkles size={18} />
+                  AI Recommended Activities
+                </h3>
+                <div className={styles.recommendationsList}>
+                  {finalResult.recommendations.map((rec, idx) => (
+                    <div key={idx} className={styles.recCard}>
+                      <Sparkles size={16} className={styles.recCardIcon} />
+                      <div className={styles.recCardText}>{rec}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className={styles.nextSteps}>
               <h3>Next Steps</h3>
               <div className={styles.stepsGrid}>
@@ -258,6 +339,8 @@ export default function ScreeningModule() {
               </button>
             </div>
           </section>
+        )}
+          </>
         )}
       </main>
     </div>

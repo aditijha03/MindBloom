@@ -33,11 +33,19 @@ export default function Navbar() {
       </button>
 
       <ul className={`${styles.navLinks} ${menuOpen ? styles.open : ''}`}>
-        <li>
-          <NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>
-            Home
-          </NavLink>
-        </li>
+        {user ? (
+          <li>
+            <NavLink to="/dashboard" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>
+              Dashboard
+            </NavLink>
+          </li>
+        ) : (
+          <li>
+            <NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>
+              About Us
+            </NavLink>
+          </li>
+        )}
         <li>
           <NavLink to="/why-us" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>
             Why Us

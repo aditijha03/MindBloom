@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Smile, 
-  Meh, 
-  Frown, 
-  Zap, 
-  Palette, 
-  Search, 
-  LineChart, 
-  Calendar, 
+import {
+  Smile,
+  Meh,
+  Frown,
+  Zap,
+  Palette,
+  Search,
+  LineChart,
+  Calendar,
   Heart,
   Award,
   Baby,
   UserCheck,
-  SmilePlus
+  SmilePlus,
+  BookOpen
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
+import useProfileStore from '../../store/profileStore';
 import { useMe } from '../../hooks/useProfile';
 import { useQuiz } from '../../context/QuizContext';
+import ProfileSwitcher from '../../components/ProfileSwitcher/ProfileSwitcher';
 import styles from './Dashboard.module.css';
 
 const quotes = [
@@ -30,16 +33,15 @@ const quotes = [
 export default function Dashboard() {
   const user = useAuthStore(state => state.user);
   const { data: apiProfile, isLoading: isProfileLoading } = useMe();
+  const { getActiveProfile } = useProfileStore();
   const { result } = useQuiz();
-  const [profile, setProfile] = useState(null);
   const [mood, setMood] = useState('');
   const [quote, setQuote] = useState('');
   const [greeting, setGreeting] = useState('');
 
-  useEffect(() => {
-    const savedProfile = localStorage.getItem('mbChildProfile');
-    if (savedProfile) setProfile(JSON.parse(savedProfile));
+  const activeProfile = getActiveProfile();
 
+  useEffect(() => {
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
 
     const hour = new Date().getHours();
@@ -49,8 +51,8 @@ export default function Dashboard() {
   }, []);
 
   const parentName = apiProfile?.display_name || user?.displayName || 'Parent';
-  const childName = profile?.name || 'Your Child';
-  const childAge = profile?.age || '3';
+  const childName = activeProfile?.name || 'Your Child';
+  const childAge = activeProfile?.age || '3';
 
   const moods = [
     { icon: Smile, label: 'Happy' },
@@ -65,7 +67,7 @@ export default function Dashboard() {
     { id: 'screening', title: 'Developmental Screening', desc: 'Milestone tracking & quiz', icon: Search, color: 'blue', link: '/screening' },
     { id: 'progress', title: 'Progress Tracking', desc: 'Visual charts of growth', icon: LineChart, color: 'green', link: '/progress' },
     { id: 'weekly', title: 'Weekly Plan', desc: 'Tailored 7-day guidance', icon: Calendar, color: 'purple', link: '/weekly' },
-    { id: 'parent', title: 'Parent Guidance', icon: Heart, desc: 'Forum & support tools', color: 'orange', link: '/parent' },
+    { id: 'parent', title: 'Help & Support', icon: Heart, desc: 'Community forum & contact', color: 'orange', link: '/contact' },
   ];
 
   const milestones = [
@@ -86,8 +88,11 @@ export default function Dashboard() {
             <h1>{parentName}</h1>
             <p className={styles.quoteText}>"{quote}"</p>
           </div>
-          <div className={styles.dateBadge}>
-            {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
+          <div className={styles.welcomeActions}>
+            <ProfileSwitcher />
+            <div className={styles.dateBadge}>
+              {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
+            </div>
           </div>
         </section>
 
@@ -175,11 +180,10 @@ export default function Dashboard() {
             <h3 className={styles.cardTitle}>Developmental Milestones</h3>
             <div className={styles.timeline}>
               {milestones.map((m, i) => (
-                <div key={i} className={`${styles.timelineItem} ${
-                  parseInt(childAge) >= parseInt(m.age.split('-')[0]) &&
+                <div key={i} className={`${styles.timelineItem} ${parseInt(childAge) >= parseInt(m.age.split('-')[0]) &&
                   parseInt(childAge) <= parseInt(m.age.split('-')[1])
-                    ? styles.timelineCurrent : ''
-                }`}>
+                  ? styles.timelineCurrent : ''
+                  }`}>
                   <div className={styles.timelineMarker}></div>
                   <div className={styles.timelineInfo}>
                     <span className={styles.timelineAge}>{m.age} yrs</span>
@@ -191,11 +195,44 @@ export default function Dashboard() {
           </section>
         </div>
 
+        {/* Recommended Articles */}
+        <section className={`${styles.card} ${styles.articlesCard}`}>
+          <div className={styles.cardHeader}>
+            <BookOpen size={20} className={styles.statIcon} />
+            <h3 className={styles.cardTitle}>Recommended Articles</h3>
+          </div>
+          <div className={styles.articlesGrid}>
+
+            <div className={styles.articleLink}>
+              <h4>The Parent-Child Relationship: A Psychological Perspective</h4>
+              <p>Exploring the dynamics of parent-child bonds from a psychological lens.</p>
+              <a href="https://ijip.in/wp-content/uploads/2025/05/18.01.163.20251302.pdf?utm_source=copilot.com" target="_blank" rel="noopener noreferrer">Read Article →</a>
+            </div>
+            <div className={styles.articleLink}>
+              <h4>Editorial for Parents and Children</h4>
+              <p>Insights and guidance for navigating parenting challenges.</p>
+              <a href="https://ijip.in/wp-content/uploads/2025/05/18.01.163.20251302.pdf?utm_source=copilot.com" target="_blank" rel="noopener noreferrer">Read Article →</a>
+            </div>
+            <div className={styles.articleLink}>
+              <h4>Parents and Caregivers Are Essential to Children’s Healthy Development</h4>
+              <p>Why caregiver involvement is crucial for child wellbeing.</p>
+              <a href="https://www.apa.org/topics/families/parents-caregivers-kids-healthy-development?utm_source=copilot.com" target="_blank" rel="noopener noreferrer">Read Article →</a>
+            </div>
+            <div className={styles.articleLink}>
+              <h4>The Relation Between Psychological Resilience and Parental Attitudes in Adolescents: A Systematic Review</h4>
+              <p>A systematic review exploring how parental attitudes influence resilience in teenagers.</p>
+              <a href="https://link.springer.com/article/10.1007/s12144-023-04147-0" target="_blank" rel="noopener noreferrer">Read Article →</a>
+            </div>
+          </div>
+
+
+        </section>
+
         {/* Concerns */}
-        {profile?.concerns && (
+        {activeProfile?.concerns && (
           <section className={`${styles.card} ${styles.concernsCard}`}>
             <h3 className={styles.cardTitle}>Recent Concerns</h3>
-            <p>{profile.concerns}</p>
+            <p>{activeProfile.concerns}</p>
             <Link to="/contact" className={styles.concernLink}>Consult a specialist →</Link>
           </section>
         )}

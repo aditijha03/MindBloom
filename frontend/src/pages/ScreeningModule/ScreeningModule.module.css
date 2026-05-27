@@ -460,3 +460,88 @@
   
   .content { padding: 1.5rem; }
 }
+
+/* AI Loading state & recommendations */
+.loadingContainer {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+}
+
+.spinnerIcon {
+  animation: spin 2s linear infinite;
+  color: var(--color-primary, #8c2a30);
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingContainer h3 {
+  color: var(--color-primary);
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.loadingContainer p {
+  color: #64748b;
+  font-size: 1rem;
+  max-width: 550px;
+  line-height: 1.6;
+}
+
+.recommendationsTitle {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+  margin: 2.5rem 0 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.recCard {
+  background: white;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #475569;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: transform 0.2s ease;
+  text-align: left;
+}
+
+.recCard:hover {
+  transform: translateX(4px);
+}
+
+.recCardText {
+  flex: 1;
+}
+
+.recCardIcon {
+  color: var(--color-primary);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Sparkles,
   ArrowLeft,
@@ -9,7 +9,10 @@ import {
   Printer,
   Calendar,
   Target,
-  Zap
+  Zap,
+  Bell,
+  Plus,
+  Trash2
 } from 'lucide-react';
 import { ACTIVITIES_DB } from '../../data/activities';
 import styles from './WeeklyPlanGenerator.module.css';
@@ -40,6 +43,59 @@ export default function WeeklyPlanGenerator() {
   const [minutes, setMinutes] = useState(30);
   const [plan, setPlan] = useState(null);
   const [feedback, setFeedback] = useState({});
+  const [reminders, setReminders] = useState([
+    { id: 1, text: 'Morning stretch and breathing', time: '08:30' },
+    { id: 2, text: 'Reading time before bed', time: '20:00' }
+  ]);
+  const [newReminder, setNewReminder] = useState('');
+  const [reminderTime, setReminderTime] = useState('09:00');
+
+  // 1. Initial Load: Try to restore existing plan or pre-fill from child profile
+  useEffect(() => {
+    const savedPlan = localStorage.getItem('mbWeeklyPlan');
+    const savedFeedback = localStorage.getItem('mbWeeklyFeedback');
+    const savedReminders = localStorage.getItem('mbReminders');
+    const profile = JSON.parse(localStorage.getItem('mbChildProfile') || '{}');
+
+    if (savedPlan) {
+      setPlan(JSON.parse(savedPlan));
+    }
+    if (savedFeedback) {
+      setFeedback(JSON.parse(savedFeedback));
+    }
+    if (savedReminders) {
+      setReminders(JSON.parse(savedReminders));
+    }
+
+    // Pre-fill from profile if settings aren't set
+    if (profile.age) {
+      // Map profile age (e.g. 4) to group (3-5)
+      const age = parseInt(profile.age);
+      if (age <= 2) setAgeGroup('0-2');
+      else if (age <= 5) setAgeGroup('3-5');
+      else setAgeGroup('6-8');
+    }
+  }, []);
+
+  // 2. Auto-save whenever plan, feedback or reminders change
+  useEffect(() => {
+    if (plan) {
+      localStorage.setItem('mbWeeklyPlan', JSON.stringify(plan));
+    }
+    localStorage.setItem('mbWeeklyFeedback', JSON.stringify(feedback));
+    localStorage.setItem('mbReminders', JSON.stringify(reminders));
+  }, [plan, feedback, reminders]);
+
+  const addReminder = (e) => {
+    e.preventDefault();
+    if (!newReminder.trim()) return;
+    setReminders([...reminders, { id: Date.now(), text: newReminder, time: reminderTime }]);
+    setNewReminder('');
+  };
+
+  const deleteReminder = (id) => {
+    setReminders(reminders.filter(r => r.id !== id));
+  };
 
   const concerns = [
     'Speech Delay', 'Social Interaction', 'Sensory Issues',
@@ -66,10 +122,13 @@ export default function WeeklyPlanGenerator() {
     // Shuffle for variety
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
 
-    const newPlan = DAYS.map((day, i) => ({
-      day,
-      activity: shuffled[i % shuffled.length] || shuffled[0],
-    }));
+    const newPlan = {
+      createdAt: new Date().toISOString(),
+      activities: DAYS.map((day, i) => ({
+        day,
+        activity: shuffled[i % shuffled.length] || shuffled[0],
+      }))
+    };
 
     setPlan(newPlan);
     setFeedback({});
@@ -215,9 +274,13 @@ export default function WeeklyPlanGenerator() {
             </div>
           </div>
 
+          <div style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '0.85rem', color: '#666' }}>
+            Plan generated on: {new Date(plan.createdAt).toLocaleDateString()}
+          </div>
+
           {/* 7-Day Grid */}
           <div className={styles.weekGrid}>
-            {plan.map((dayPlan, dayIdx) => {
+            {plan.activities.map((dayPlan, dayIdx) => {
               const act = dayPlan.activity;
               const status = feedback[dayIdx];
               const domainColor = getDomainColor(act?.skill);
@@ -282,6 +345,50 @@ export default function WeeklyPlanGenerator() {
           <p className={styles.tip}>
             <Zap size={14} /> <strong>Tip:</strong> Mark each activity as Done, Partial, or Skipped to track your week. Click "Regenerate" to get a fresh plan.
           </p>
+
+          <section className={styles.reminderCard}>
+            <div className={styles.cardHeader}>
+              <Bell size={20} color="#F64A8A" />
+              <h3 className={styles.cardTitle}>Daily Reminders</h3>
+            </div>
+            <p className={styles.reminderDesc}>Set specific times for developmental habits like reading or stretching.</p>
+            
+            <form className={styles.reminderForm} onSubmit={addReminder}>
+              <input 
+                type="text" 
+                placeholder="Remind me to..." 
+                value={newReminder}
+                onChange={(e) => setNewReminder(e.target.value)}
+                className={styles.input}
+              />
+              <input 
+                type="time" 
+                value={reminderTime}
+                onChange={(e) => setReminderTime(e.target.value)}
+                className={styles.timeInput}
+              />
+              <button type="submit" className={styles.addBtn}>
+                <Plus size={20} />
+              </button>
+            </form>
+
+            <div className={styles.reminderList}>
+              {reminders.map(r => (
+                <div key={r.id} className={styles.reminderItem}>
+                  <div className={styles.rInfo}>
+                    <span className={styles.rTime}>{r.time}</span>
+                    <span className={styles.rText}>{r.text}</span>
+                  </div>
+                  <button className={styles.delBtn} onClick={() => deleteReminder(r.id)}>
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+              {reminders.length === 0 && (
+                <div className={styles.emptyReminders}>No reminders set for today.</div>
+              )}
+            </div>
+          </section>
         </section>
       )}
     </div>
