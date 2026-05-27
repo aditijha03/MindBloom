@@ -7,6 +7,15 @@ const SaveAssessmentBody = Joi.object({
   responses: Joi.object().required()
 });
 
+const AnalyzeAssessmentBody = Joi.object({
+  type: Joi.string().valid('quiz', 'screening').required(),
+  responses: Joi.object().required(),
+  ageGroup: Joi.string().allow('').optional(),
+  milestones: Joi.object().optional()
+});
+
 module.exports = {
-  SaveAssessmentBody
+  SaveAssessmentBody,
+  AnalyzeAssessmentBody
 };
+

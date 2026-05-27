@@ -54,7 +54,32 @@ const authenticateStrong = asyncHandler(async (req, res, next) => {
   next();
 });
 
+const optionalAuthenticate = asyncHandler(async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const { data: { user }, error } = await supabaseAnon.auth.getUser(token);
+      if (!error && user) {
+        req.user = {
+          id: user.id,
+          email: user.email,
+          role: user.user_metadata?.role || 'user'
+        };
+        req.token = token;
+      }
+    } catch (err) {
+      // Ignore token verification errors for optional auth
+    }
+  }
+
+  next();
+});
+
 module.exports = {
   authenticate,
-  authenticateStrong
+  authenticateStrong,
+  optionalAuthenticate
 };
+
