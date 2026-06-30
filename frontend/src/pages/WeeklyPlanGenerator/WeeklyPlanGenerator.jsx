@@ -15,6 +15,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { ACTIVITIES_DB } from '../../data/activities';
+import api from '../../api/client';
 import styles from './WeeklyPlanGenerator.module.css';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -43,33 +44,35 @@ export default function WeeklyPlanGenerator() {
   const [minutes, setMinutes] = useState(30);
   const [plan, setPlan] = useState(null);
   const [feedback, setFeedback] = useState({});
-  const [reminders, setReminders] = useState([
-    { id: 1, text: 'Morning stretch and breathing', time: '08:30' },
-    { id: 2, text: 'Reading time before bed', time: '20:00' }
-  ]);
+  const [reminders, setReminders] = useState([]);
   const [newReminder, setNewReminder] = useState('');
   const [reminderTime, setReminderTime] = useState('09:00');
 
-  // 1. Initial Load: Try to restore existing plan or pre-fill from child profile
+  // 1. Initial Load: Load weekly plan and reminders from PostgreSQL
   useEffect(() => {
-    const savedPlan = localStorage.getItem('mbWeeklyPlan');
-    const savedFeedback = localStorage.getItem('mbWeeklyFeedback');
-    const savedReminders = localStorage.getItem('mbReminders');
+    const loadData = async () => {
+      try {
+        const planRes = await api.get('/weekly-plans');
+        if (planRes.data && planRes.data.data.plan) {
+          const activePlan = planRes.data.data.plan;
+          setPlan(activePlan);
+          setFeedback(activePlan.feedback || {});
+        }
+
+        const remindersRes = await api.get('/reminders');
+        if (remindersRes.data && remindersRes.data.data.reminders) {
+          setReminders(remindersRes.data.data.reminders);
+        }
+      } catch (err) {
+        console.error('Failed to load weekly plan data from database:', err);
+      }
+    };
+
+    loadData();
+
+    // Pre-fill from child profile if available
     const profile = JSON.parse(localStorage.getItem('mbChildProfile') || '{}');
-
-    if (savedPlan) {
-      setPlan(JSON.parse(savedPlan));
-    }
-    if (savedFeedback) {
-      setFeedback(JSON.parse(savedFeedback));
-    }
-    if (savedReminders) {
-      setReminders(JSON.parse(savedReminders));
-    }
-
-    // Pre-fill from profile if settings aren't set
     if (profile.age) {
-      // Map profile age (e.g. 4) to group (3-5)
       const age = parseInt(profile.age);
       if (age <= 2) setAgeGroup('0-2');
       else if (age <= 5) setAgeGroup('3-5');
@@ -77,24 +80,37 @@ export default function WeeklyPlanGenerator() {
     }
   }, []);
 
-  // 2. Auto-save whenever plan, feedback or reminders change
-  useEffect(() => {
-    if (plan) {
-      localStorage.setItem('mbWeeklyPlan', JSON.stringify(plan));
-    }
-    localStorage.setItem('mbWeeklyFeedback', JSON.stringify(feedback));
-    localStorage.setItem('mbReminders', JSON.stringify(reminders));
-  }, [plan, feedback, reminders]);
-
-  const addReminder = (e) => {
+  const addReminder = async (e) => {
     e.preventDefault();
     if (!newReminder.trim()) return;
-    setReminders([...reminders, { id: Date.now(), text: newReminder, time: reminderTime }]);
-    setNewReminder('');
+
+    try {
+      const { data } = await api.post('/reminders', {
+        text: newReminder,
+        time: reminderTime
+      });
+
+      if (data && data.data.reminder) {
+        setReminders([...reminders, data.data.reminder]);
+        setNewReminder('');
+      }
+    } catch (err) {
+      console.error('Failed to save reminder:', err);
+      // Local fallback
+      setReminders([...reminders, { id: Date.now(), text: newReminder, time: reminderTime }]);
+      setNewReminder('');
+    }
   };
 
-  const deleteReminder = (id) => {
-    setReminders(reminders.filter(r => r.id !== id));
+  const deleteReminder = async (id) => {
+    try {
+      if (typeof id === 'string') {
+        await api.delete(`/reminders/${id}`);
+      }
+      setReminders(reminders.filter(r => r.id !== id));
+    } catch (err) {
+      console.error('Failed to delete reminder:', err);
+    }
   };
 
   const concerns = [
@@ -108,7 +124,7 @@ export default function WeeklyPlanGenerator() {
     );
   };
 
-  const generatePlan = () => {
+  const generatePlan = async () => {
     let pool = ACTIVITIES_DB.filter(a => a.age === ageGroup);
 
     // Prioritize activities matching selected concerns
@@ -122,20 +138,50 @@ export default function WeeklyPlanGenerator() {
     // Shuffle for variety
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
 
-    const newPlan = {
-      createdAt: new Date().toISOString(),
+    const profile = JSON.parse(localStorage.getItem('mbChildProfile') || '{}');
+    const childId = profile?.id || null;
+
+    const planPayload = {
+      childId,
+      ageGroup,
+      minutes,
+      concerns: selectedConcerns,
       activities: DAYS.map((day, i) => ({
         day,
         activity: shuffled[i % shuffled.length] || shuffled[0],
       }))
     };
 
-    setPlan(newPlan);
-    setFeedback({});
+    try {
+      const { data } = await api.post('/weekly-plans', planPayload);
+      if (data && data.data.plan) {
+        setPlan(data.data.plan);
+        setFeedback({});
+      }
+    } catch (err) {
+      console.error('Failed to save weekly plan:', err);
+      // Fallback
+      setPlan({
+        id: 'local-fallback',
+        createdAt: new Date().toISOString(),
+        activities: planPayload.activities
+      });
+      setFeedback({});
+    }
   };
 
-  const handleFeedback = (dayIdx, status) => {
-    setFeedback(prev => ({ ...prev, [dayIdx]: prev[dayIdx] === status ? null : status }));
+  const handleFeedback = async (dayIdx, status) => {
+    const newStatus = feedback[dayIdx] === status ? null : status;
+    const updatedFeedback = { ...feedback, [dayIdx]: newStatus };
+    setFeedback(updatedFeedback);
+
+    if (plan && plan.id && plan.id !== 'local-fallback') {
+      try {
+        await api.patch(`/weekly-plans/${plan.id}/feedback`, { feedback: updatedFeedback });
+      } catch (err) {
+        console.error('Failed to update weekly plan feedback:', err);
+      }
+    }
   };
 
   const doneCount = Object.values(feedback).filter(f => f === 'done').length;

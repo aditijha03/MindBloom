@@ -1,8 +1,5 @@
 import { create } from 'zustand';
-import axios from 'axios';
-
-// The backend endpoint
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+import api from '../api/client';
 
 const useBloomBotStore = create((set, get) => ({
   isOpen: false,
@@ -27,7 +24,7 @@ const useBloomBotStore = create((set, get) => ({
       set({ isTyping: true, error: null });
       const { userType, ageTier } = get();
       
-      const response = await axios.post(`${API_URL}/bloombot/session`, {
+      const response = await api.post('/bloombot/session', {
         userType,
         ageTier
       });
@@ -55,7 +52,7 @@ const useBloomBotStore = create((set, get) => ({
       
       const { sessionId } = get();
       
-      const response = await axios.post(`${API_URL}/bloombot/message`, {
+      const response = await api.post('/bloombot/message', {
         sessionId,
         message
       });
