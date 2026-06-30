@@ -1,4 +1,4 @@
-# MindBloom 🌸
+# MindBloom 🌱
 
 MindBloom is a comprehensive, full-stack child psychology and developmental tracking platform. It empowers parents to monitor their child's milestones, complete clinically-inspired developmental screening quizzes, and interact with **Bloom Bot**—an AI-powered, safety-first virtual assistant designed to provide emotional support and activities for children.
 
