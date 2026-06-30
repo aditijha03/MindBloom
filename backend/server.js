@@ -2,16 +2,8 @@ const app = require('./src/app');
 const logger = require('./src/config/logger');
 const env = require('./src/config/env');
 
-// Mock startEmailWorker if it's just a stub
-const startEmailWorker = () => {
-  logger.info('Email worker stub initialized');
-};
-
 const startServer = async () => {
   try {
-    // Start background workers
-    startEmailWorker();
-
     const server = app.listen(env.port, () => {
       logger.info(`Server running on port ${env.port} in ${env.nodeEnv} mode`);
     });

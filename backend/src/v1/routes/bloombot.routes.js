@@ -1,31 +1,55 @@
 const express = require('express');
 const router = express.Router();
 const { handleMessage } = require('../../services/bloombot/orchestrator.service');
+const { getSupabaseUserClient } = require('../../config/supabase');
+const { authenticate } = require('../../middleware/authenticate');
 
-// Store sessions in memory for V1 mocking. 
-// In a real app, use a DB and associate with user IDs/session IDs.
-const sessions = new Map();
+// Secure all bot routes
+router.use(authenticate);
 
 /**
  * Initialize a new Bloom Bot session
  * POST /api/v1/bloombot/session
  */
-router.post('/session', (req, res) => {
-  const { userType, ageTier } = req.body;
-  const sessionId = Math.random().toString(36).substring(2, 15);
-  
-  sessions.set(sessionId, {
-    context: { userType: userType || 'child', ageTier: ageTier || 'middle' },
-    history: []
-  });
-
-  res.status(201).json({
-    message: 'Session created successfully',
-    sessionId,
-    disclaimer: userType === 'parent' 
+router.post('/session', async (req, res) => {
+  try {
+    const { userType, ageTier } = req.body;
+    const userId = req.user.id;
+    const token = req.token;
+    
+    const userClient = getSupabaseUserClient(token);
+    
+    const disclaimer = userType === 'parent' 
       ? "I'm Bloom, an AI assistant. I can share general information, but I'm not a licensed psychologist."
-      : "Hi! I'm Bloom, your AI feelings helper. I'm not a doctor, but I love helping you understand your feelings!"
-  });
+      : "Hi! I'm Bloom, your AI feelings helper. I'm not a doctor, but I love helping you understand your feelings!";
+      
+    const initialHistory = [{ role: 'assistant', content: disclaimer }];
+    
+    const { data: session, error } = await userClient
+      .from('chat_sessions')
+      .insert({
+        user_id: userId,
+        user_type: userType || 'child',
+        age_tier: ageTier || 'middle',
+        history: initialHistory
+      })
+      .select('id')
+      .single();
+      
+    if (error) {
+      console.error('DB Insert Error:', error);
+      throw error;
+    }
+    
+    res.status(201).json({
+      message: 'Session created successfully',
+      sessionId: session.id,
+      disclaimer
+    });
+  } catch (error) {
+    console.error('Bloom Bot Session Error:', error);
+    res.status(500).json({ error: 'Failed to initialize session. Please try again.' });
+  }
 });
 
 /**
@@ -35,27 +59,58 @@ router.post('/session', (req, res) => {
 router.post('/message', async (req, res) => {
   try {
     const { sessionId, message } = req.body;
+    const token = req.token;
 
-    if (!sessionId || !sessions.has(sessionId)) {
-      return res.status(404).json({ error: 'Session not found. Please start a new session.' });
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required.' });
     }
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required.' });
     }
 
-    const session = sessions.get(sessionId);
+    const userClient = getSupabaseUserClient(token);
 
-    // Call orchestrator
-    const result = await handleMessage(message, session.history, session.context);
+    // Fetch the session from the DB
+    const { data: session, error: fetchError } = await userClient
+      .from('chat_sessions')
+      .select('*')
+      .eq('id', sessionId)
+      .single();
 
-    // Update history if it's not a crisis (or maybe update it anyway, but PRD says crisis pauses flow)
-    session.history.push({ role: 'user', content: message });
-    session.history.push({ role: 'assistant', content: result.text });
+    if (fetchError || !session) {
+      return res.status(404).json({ error: 'Session not found. Please start a new session.' });
+    }
 
-    // Keep history manageable (last 10 turns)
-    if (session.history.length > 20) {
-      session.history = session.history.slice(session.history.length - 20);
+    // Call orchestrator - passing token and client IP for audit logging
+    const result = await handleMessage(
+      message, 
+      session.history, 
+      session.user_type === 'parent' ? { userType: 'parent' } : { userType: 'child', ageTier: session.age_tier },
+      token,
+      req.ip
+    );
+
+    // Update history
+    const updatedHistory = [...session.history];
+    updatedHistory.push({ role: 'user', content: message });
+    updatedHistory.push({ role: 'assistant', content: result.text });
+
+    // Keep history manageable (last 10 turns = 20 messages)
+    let finalHistory = updatedHistory;
+    if (updatedHistory.length > 20) {
+      finalHistory = updatedHistory.slice(updatedHistory.length - 20);
+    }
+
+    // Save updated history back to database
+    const { error: updateError } = await userClient
+      .from('chat_sessions')
+      .update({ history: finalHistory })
+      .eq('id', sessionId);
+
+    if (updateError) {
+      console.error('DB Update Error:', updateError);
+      throw updateError;
     }
 
     res.status(200).json({
@@ -72,16 +127,29 @@ router.post('/message', async (req, res) => {
  * Get session history
  * GET /api/v1/bloombot/history/:sessionId
  */
-router.get('/history/:sessionId', (req, res) => {
-  const { sessionId } = req.params;
-  
-  if (!sessions.has(sessionId)) {
-    return res.status(404).json({ error: 'Session not found' });
-  }
+router.get('/history/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const token = req.token;
+    
+    const userClient = getSupabaseUserClient(token);
+    const { data: session, error } = await userClient
+      .from('chat_sessions')
+      .select('history')
+      .eq('id', sessionId)
+      .single();
+      
+    if (error || !session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
 
-  res.status(200).json({
-    history: sessions.get(sessionId).history
-  });
+    res.status(200).json({
+      history: session.history
+    });
+  } catch (error) {
+    console.error('Bloom Bot History Error:', error);
+    res.status(500).json({ error: 'Failed to retrieve chat history.' });
+  }
 });
 
 module.exports = router;

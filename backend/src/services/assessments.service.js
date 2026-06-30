@@ -1,10 +1,10 @@
-const { supabaseAdmin } = require('../config/supabase');
+const { getSupabaseUserClient } = require('../config/supabase');
 const AppError = require('../utils/AppError');
 
-const saveAssessment = async (userId, assessmentData) => {
+const saveAssessment = async (userId, assessmentData, token) => {
   const { score, resultType, summary, responses } = assessmentData;
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseUserClient(token)
     .from('assessments')
     .insert({
       user_id: userId,
@@ -21,8 +21,8 @@ const saveAssessment = async (userId, assessmentData) => {
   return data;
 };
 
-const listAssessments = async (userId) => {
-  const { data, error } = await supabaseAdmin
+const listAssessments = async (userId, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('assessments')
     .select('*')
     .eq('user_id', userId)

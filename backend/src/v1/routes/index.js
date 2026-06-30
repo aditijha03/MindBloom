@@ -25,6 +25,11 @@ router.use('/posts', commentsRoutes);
 router.use('/assessments', assessmentsRoutes);
 
 const bloombotRoutes = require('./bloombot.routes');
+const weeklyPlansRoutes = require('./weeklyPlans.routes');
+const remindersRoutes = require('./reminders.routes');
+
 router.use('/bloombot', bloombotRoutes);
+router.use('/weekly-plans', weeklyPlansRoutes);
+router.use('/reminders', remindersRoutes);
 
 module.exports = router;

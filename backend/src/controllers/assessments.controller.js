@@ -4,12 +4,12 @@ const { success } = require('../utils/response');
 const asyncHandler = require('../utils/asyncHandler');
 
 const saveAssessment = asyncHandler(async (req, res) => {
-  const assessment = await assessmentsService.saveAssessment(req.user.id, req.body);
+  const assessment = await assessmentsService.saveAssessment(req.user.id, req.body, req.token);
   return success(req, res, { assessment }, 201);
 });
 
 const listAssessments = asyncHandler(async (req, res) => {
-  const assessments = await assessmentsService.listAssessments(req.user.id);
+  const assessments = await assessmentsService.listAssessments(req.user.id, req.token);
   return success(req, res, { assessments });
 });
 
@@ -31,7 +31,7 @@ const analyzeAssessment = asyncHandler(async (req, res) => {
         aiRecommendations: analysis.recommendations,
         aiDetailedBreakdown: analysis.detailedBreakdown
       }
-    });
+    }, req.token);
   }
 
   return success(req, res, { analysis, savedAssessment }, 200);

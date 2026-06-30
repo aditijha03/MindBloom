@@ -1,9 +1,11 @@
-const { supabaseAdmin } = require('../config/supabase');
+const { getSupabaseUserClient } = require('../config/supabase');
 const AppError = require('../utils/AppError');
 
-const listComments = async (postId, { page, limit }) => {
+const listComments = async (postId, { page, limit }, token) => {
+  const userClient = getSupabaseUserClient(token);
+
   // Verify post exists and is published
-  const { data: post, error: postError } = await supabaseAdmin
+  const { data: post, error: postError } = await userClient
     .from('posts')
     .select('id, status')
     .eq('id', postId)
@@ -15,7 +17,7 @@ const listComments = async (postId, { page, limit }) => {
 
   const offset = (page - 1) * limit;
 
-  const { data, error, count } = await supabaseAdmin
+  const { data, error, count } = await userClient
     .from('comments')
     .select('*, profiles(display_name, avatar_url)', { count: 'exact' })
     .eq('post_id', postId)
@@ -36,9 +38,11 @@ const listComments = async (postId, { page, limit }) => {
   };
 };
 
-const createComment = async ({ postId, authorId, body }) => {
+const createComment = async ({ postId, authorId, body }, token) => {
+  const userClient = getSupabaseUserClient(token);
+
   // Verify post is published
-  const { data: post, error: postError } = await supabaseAdmin
+  const { data: post, error: postError } = await userClient
     .from('posts')
     .select('status')
     .eq('id', postId)
@@ -48,7 +52,7 @@ const createComment = async ({ postId, authorId, body }) => {
     throw new AppError('Post not found or not accessible.', 404, 'NOT_FOUND');
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await userClient
     .from('comments')
     .insert({
       post_id: postId,
@@ -63,8 +67,10 @@ const createComment = async ({ postId, authorId, body }) => {
   return data;
 };
 
-const deleteComment = async (postId, commentId, userId, userRole) => {
-  const { data: comment, error: getError } = await supabaseAdmin
+const deleteComment = async (postId, commentId, userId, userRole, token) => {
+  const userClient = getSupabaseUserClient(token);
+
+  const { data: comment, error: getError } = await userClient
     .from('comments')
     .select('author_id')
     .eq('id', commentId)
@@ -78,7 +84,7 @@ const deleteComment = async (postId, commentId, userId, userRole) => {
 
   if (!isOwner && !isStaff) throw new AppError('Access denied.', 403, 'FORBIDDEN');
 
-  const { error } = await supabaseAdmin
+  const { error } = await userClient
     .from('comments')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', commentId);

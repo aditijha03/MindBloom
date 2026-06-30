@@ -25,8 +25,15 @@ async function generateResponse(systemPrompt, history, userMessage, maxTokens = 
         systemInstruction: systemPrompt
       });
 
-      // Map our app's history format to Gemini's expected format
-      const formattedHistory = history.map(msg => ({
+      // Map our app's history format to Gemini's expected format.
+      // Gemini API requires the first message in history to have role 'user' (model).
+      let startIndex = 0;
+      while (startIndex < history.length && history[startIndex].role === 'assistant') {
+        startIndex++;
+      }
+      const validHistory = history.slice(startIndex);
+
+      const formattedHistory = validHistory.map(msg => ({
         role: msg.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: msg.content }]
       }));

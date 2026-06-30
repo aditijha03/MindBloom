@@ -16,7 +16,28 @@ const supabaseAdmin = createClient(env.supabaseUrl, env.supabaseServiceRoleKey, 
   }
 });
 
+/**
+ * Creates a user-scoped Supabase client that passes the user's JWT token
+ * to enforce database RLS policies.
+ * @param {string} token - The user's Bearer JWT access token
+ */
+const getSupabaseUserClient = (token) => {
+  if (!token) return supabaseAnon;
+  return createClient(env.supabaseUrl, env.supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    },
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false
+    }
+  });
+};
+
 module.exports = {
   supabaseAnon,
-  supabaseAdmin
+  supabaseAdmin,
+  getSupabaseUserClient
 };

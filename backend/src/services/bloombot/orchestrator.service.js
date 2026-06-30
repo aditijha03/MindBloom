@@ -9,14 +9,17 @@ const { analyzeDistress } = require('./distressDetector');
 const { retrieveKnowledgeChunks } = require('./rag.service');
 const { generateResponse } = require('./llm.service');
 const { PROMPTS, CRISIS_TEMPLATES } = require('../../config/prompts');
+const { getSupabaseUserClient } = require('../../config/supabase');
 
 /**
  * Handle an incoming message to Bloom Bot
  * @param {string} message - User's new message
  * @param {Array} history - Array of { role, content }
  * @param {object} sessionContext - { userType: 'child' | 'parent', ageTier: 'early'|'middle'|'tween' }
+ * @param {string} token - User's JWT access token
+ * @param {string} ipAddress - Client IP address
  */
-async function handleMessage(message, history, sessionContext) {
+async function handleMessage(message, history, sessionContext, token, ipAddress) {
   // 1. Distress Detection (parallel safety process)
   const distress = analyzeDistress(message);
   
@@ -27,7 +30,31 @@ async function handleMessage(message, history, sessionContext) {
       ? CRISIS_TEMPLATES.parent 
       : CRISIS_TEMPLATES.child;
       
-    // Ideally log this event to Audit Log Store here
+    // Log this event to Audit Log Store
+    if (token) {
+      try {
+        const userClient = getSupabaseUserClient(token);
+        const { data: { user } } = await userClient.auth.getUser();
+        
+        await userClient
+          .from('audit_logs')
+          .insert({
+            user_id: user ? user.id : null,
+            action: 'CRISIS_TRIGGERED',
+            resource_type: 'bloombot',
+            resource_id: 'distress_detector',
+            ip_address: ipAddress || '127.0.0.1',
+            metadata: {
+              trigger: distress.trigger,
+              message_preview: message.substring(0, 100),
+              user_type: sessionContext?.userType || 'child'
+            }
+          });
+      } catch (logErr) {
+        console.error('Failed to write crisis audit log:', logErr);
+      }
+    }
+    
     return {
       text: crisisTemplate,
       isCrisis: true

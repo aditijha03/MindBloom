@@ -1,9 +1,11 @@
-const { supabaseAdmin } = require('../config/supabase');
+const { getSupabaseUserClient } = require('../config/supabase');
 const AppError = require('../utils/AppError');
 
-const createMilestone = async (userId, data) => {
+const createMilestone = async (userId, data, token) => {
+  const userClient = getSupabaseUserClient(token);
+  
   // Check ownership of child_profile first
-  const { data: child, error: childError } = await supabaseAdmin
+  const { data: child, error: childError } = await userClient
     .from('child_profiles')
     .select('id')
     .eq('id', data.childId)
@@ -12,7 +14,7 @@ const createMilestone = async (userId, data) => {
 
   if (childError || !child) throw new AppError('Child profile not found or access denied.', 404, 'NOT_FOUND');
 
-  const { data: milestone, error } = await supabaseAdmin
+  const { data: milestone, error } = await userClient
     .from('milestones')
     .insert({
       child_id: data.childId,
@@ -28,9 +30,11 @@ const createMilestone = async (userId, data) => {
   return milestone;
 };
 
-const getMilestones = async (userId, childId) => {
+const getMilestones = async (userId, childId, token) => {
+  const userClient = getSupabaseUserClient(token);
+
   // Check ownership
-  const { data: child, error: childError } = await supabaseAdmin
+  const { data: child, error: childError } = await userClient
     .from('child_profiles')
     .select('id')
     .eq('id', childId)
@@ -39,7 +43,7 @@ const getMilestones = async (userId, childId) => {
 
   if (childError || !child) throw new AppError('Child profile not found or access denied.', 404, 'NOT_FOUND');
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await userClient
     .from('milestones')
     .select('*')
     .eq('child_id', childId)
@@ -50,13 +54,10 @@ const getMilestones = async (userId, childId) => {
   return data;
 };
 
-const updateMilestone = async (id, userId, updates) => {
-  // RLS will handle the base ownership, but we can double check or just let Supabase do its thing.
-  // We'll use the service role, so we need to check manual ownership if we want to be safe, 
-  // or use the authenticate user context if we were using supabaseAnon.
-  // Since we use supabaseAdmin, we MUST check manually.
+const updateMilestone = async (id, userId, updates, token) => {
+  const userClient = getSupabaseUserClient(token);
 
-  const { data: milestone, error: getError } = await supabaseAdmin
+  const { data: milestone, error: getError } = await userClient
     .from('milestones')
     .select('child_id')
     .eq('id', id)
@@ -64,7 +65,7 @@ const updateMilestone = async (id, userId, updates) => {
 
   if (getError || !milestone) throw new AppError('Milestone not found.', 404, 'NOT_FOUND');
 
-  const { data: child, error: childError } = await supabaseAdmin
+  const { data: child, error: childError } = await userClient
     .from('child_profiles')
     .select('id')
     .eq('id', milestone.child_id)
@@ -78,7 +79,7 @@ const updateMilestone = async (id, userId, updates) => {
     updateData.achieved_at = new Date().toISOString();
   }
 
-  const { data: updated, error } = await supabaseAdmin
+  const { data: updated, error } = await userClient
     .from('milestones')
     .update(updateData)
     .eq('id', id)

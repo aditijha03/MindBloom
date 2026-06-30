@@ -5,12 +5,12 @@ const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 
 const getMe = asyncHandler(async (req, res) => {
-  const profile = await usersService.getMe(req.user.id);
+  const profile = await usersService.getMe(req.user.id, req.token);
   return success(req, res, { profile });
 });
 
 const updateMe = asyncHandler(async (req, res) => {
-  const profile = await usersService.updateMe(req.user.id, req.body);
+  const profile = await usersService.updateMe(req.user.id, req.body, req.token);
   return success(req, res, { profile });
 });
 
@@ -20,13 +20,13 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   }
 
   const avatarUrl = await storageService.uploadAvatar(req.user.id, req.file);
-  await usersService.updateAvatar(req.user.id, avatarUrl);
+  await usersService.updateAvatar(req.user.id, avatarUrl, req.token);
 
   return success(req, res, { avatarUrl });
 });
 
 const getUserById = asyncHandler(async (req, res) => {
-  const profile = await usersService.getUserById(req.params.id);
+  const profile = await usersService.getUserById(req.params.id, req.token);
   return success(req, res, { profile });
 });
 

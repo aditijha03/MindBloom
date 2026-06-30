@@ -1,8 +1,8 @@
-const { supabaseAdmin } = require('../config/supabase');
+const { getSupabaseUserClient } = require('../config/supabase');
 const AppError = require('../utils/AppError');
 
-const getMe = async (userId) => {
-  const { data, error } = await supabaseAdmin
+const getMe = async (userId, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('profiles')
     .select('*')
     .eq('id', userId)
@@ -13,12 +13,12 @@ const getMe = async (userId) => {
   return data;
 };
 
-const updateMe = async (userId, { displayName, bio }) => {
+const updateMe = async (userId, { displayName, bio }, token) => {
   const updates = {};
   if (displayName) updates.display_name = displayName;
   if (bio !== undefined) updates.bio = bio;
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseUserClient(token)
     .from('profiles')
     .update(updates)
     .eq('id', userId)
@@ -30,8 +30,8 @@ const updateMe = async (userId, { displayName, bio }) => {
   return data;
 };
 
-const updateAvatar = async (userId, avatarUrl) => {
-  const { data, error } = await supabaseAdmin
+const updateAvatar = async (userId, avatarUrl, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('profiles')
     .update({ avatar_url: avatarUrl })
     .eq('id', userId)
@@ -43,8 +43,8 @@ const updateAvatar = async (userId, avatarUrl) => {
   return data;
 };
 
-const getUserById = async (id) => {
-  const { data, error } = await supabaseAdmin
+const getUserById = async (id, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('profiles')
     .select('id, display_name, avatar_url, bio, created_at')
     .eq('id', id)

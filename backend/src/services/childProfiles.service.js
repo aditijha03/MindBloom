@@ -1,8 +1,8 @@
-const { supabaseAdmin } = require('../config/supabase');
+const { getSupabaseUserClient } = require('../config/supabase');
 const AppError = require('../utils/AppError');
 
-const createChildProfile = async (parentId, data) => {
-  const { data: profile, error } = await supabaseAdmin
+const createChildProfile = async (parentId, data, token) => {
+  const { data: profile, error } = await getSupabaseUserClient(token)
     .from('child_profiles')
     .insert({
       parent_id: parentId,
@@ -20,8 +20,8 @@ const createChildProfile = async (parentId, data) => {
   return profile;
 };
 
-const getChildProfiles = async (parentId) => {
-  const { data, error } = await supabaseAdmin
+const getChildProfiles = async (parentId, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('child_profiles')
     .select('*')
     .eq('parent_id', parentId);
@@ -31,8 +31,8 @@ const getChildProfiles = async (parentId) => {
   return data;
 };
 
-const updateChildProfile = async (id, parentId, updates) => {
-  const { data, error } = await supabaseAdmin
+const updateChildProfile = async (id, parentId, updates, token) => {
+  const { data, error } = await getSupabaseUserClient(token)
     .from('child_profiles')
     .update({
       name: updates.name,
